@@ -10,69 +10,77 @@ class ChatbotScreen extends StatefulWidget {
 class _ChatbotScreenState extends State<ChatbotScreen> {
   List<Map<String, String>> _messages = []; // Stores role & content
   TextEditingController _controller = TextEditingController();
-  FocusNode _focusNode = FocusNode(); // FocusNode to manage cursor focus
+  FocusNode _focusNode = FocusNode(); // Manage cursor focus
 
-  // Your OpenAI API key
-  final String _apiKey = 'YOUR_OPENAI_API_KEY';
-
-  @override
-  void initState() {
-    super.initState();
-    // Automatically request focus on the text field when the screen is opened
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _focusNode.requestFocus();
-    });
-  }
+  final String _apiUrl = 'http://localhost:8000/recommendation/';  // FastAPI server URL
 
   @override
   void dispose() {
-    _focusNode.dispose(); // Clean up the FocusNode
+    _focusNode.dispose();
     _controller.dispose();
     super.dispose();
   }
 
-  // Function to send message to OpenAI
-  Future<void> _sendMessageToOpenAI(String message) async {
+  // Function to send message to the FastAPI backend
+  Future<void> _sendMessageToBackend(String message) async {
     setState(() {
       _messages.add({'role': 'user', 'content': message});
     });
 
-    final url = Uri.parse('https://api.openai.com/v1/chat/completions');
+    try {
+      final response = await http.post(
+        Uri.parse(_apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'message': message, // Sending user message to the backend
+        }),
+      );
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $_apiKey',
-      },
-      body: json.encode({
-        'model': 'gpt-3.5-turbo',
-        'messages': _messages, // Send the whole conversation history
-        'max_tokens': 100,
-        'temperature': 0.7, // Control randomness, adjust for accuracy
-      }),
-    );
+      // Log the response for debugging
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final aiResponse = data['choices'][0]['message']['content'];
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
 
+        // Extract the assistant's response properly
+        final aiResponse = data['response']['summary'] ?? 'No summary available.';
+
+        // Check if aiResponse is a String
+        if (aiResponse is String) {
+          setState(() {
+            _messages.add({'role': 'assistant', 'content': aiResponse});
+          });
+        } else {
+          print('Unexpected response type: ${aiResponse.runtimeType}');
+          setState(() {
+            _messages.add({'role': 'assistant', 'content': 'Error: Invalid response from assistant.'});
+          });
+        }
+      } else {
+        print('Failed to connect to backend: ${response.statusCode}');
+        setState(() {
+          _messages.add({'role': 'assistant', 'content': 'Error: Unable to connect to backend.'});
+        });
+      }
+    } catch (e) {
+      print('Error sending message: $e');
       setState(() {
-        _messages.add({'role': 'assistant', 'content': aiResponse});
+        _messages.add({'role': 'assistant', 'content': 'Error: Failed to send message.'});
       });
-    } else {
-      print('Failed to connect to OpenAI API: ${response.statusCode}');
     }
   }
 
-  // Function to handle message send on Enter key or Send button
+
+  // Handle message send on Enter key or Send button
   void _handleSendMessage() {
     final message = _controller.text.trim();
     if (message.isNotEmpty) {
       _controller.clear(); // Clear input field
-      _sendMessageToOpenAI(message); // Send message to OpenAI
-      _focusNode
-          .requestFocus(); // Keep the cursor in the text field after sending
+      _sendMessageToBackend(message); // Send message to FastAPI backend
+      _focusNode.requestFocus(); // Keep the cursor in the text field
     }
   }
 
@@ -80,20 +88,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Chat with Health Assistant',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        title: Text('Chat with Health Assistant'),
         backgroundColor: Colors.blueAccent,
       ),
       body: Column(
@@ -107,15 +102,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                   title: Align(
                     alignment: message['role'] == 'user'
                         ? Alignment.centerRight
-                        : Alignment
-                            .centerLeft, // AI message on left, user on right
+                        : Alignment.centerLeft, // AI message on left, user on right
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: message['role'] == 'user'
                             ? Colors.blueAccent
-                            : Colors
-                                .grey[300], // Different color for AI messages
+                            : Colors.grey[300], // Different color for AI messages
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -139,9 +132,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    focusNode: _focusNode, // Keep focus in the input field
+                    focusNode: _focusNode,
                     decoration: InputDecoration(
-                      hintText: 'Type a message',
+                      hintText: 'Describe your symptoms...',
                       border: OutlineInputBorder(),
                     ),
                     onSubmitted: (value) {
