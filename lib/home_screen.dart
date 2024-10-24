@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   _buildHoverableCard(
                     context,
-                    Icons.chat,
+                    Icons.message, // Changed icon for Chat with Assistant
                     'Chat with Assistant',
                     Colors.yellow[600]!,
                     '/chatbot',
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(width: 10),
                   _buildHoverableCard(
                     context,
-                    Icons.local_hospital,
+                    Icons.medical_services, // Changed icon for Medical Products
                     'Medical Products',
                     Colors.green[300]!,
                     '/medicalProducts',
@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(width: 10),
                   _buildHoverableCard(
                     context,
-                    Icons.local_pharmacy,
+                    Icons.event_available, // Changed icon for Appointments
                     'Appointments',
                     Colors.pink[200]!,
                     '/medicines',
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(width: 10),
                   _buildHoverableCard(
                     context,
-                    Icons.science,
+                    Icons.medication, // Changed icon for Personal Medications
                     'Personal Medications',
                     Colors.blue[200]!,
                     '/labTests',
