@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:collection';
 
 class ChatbotScreen extends StatefulWidget {
   @override
@@ -8,11 +9,10 @@ class ChatbotScreen extends StatefulWidget {
 }
 
 class _ChatbotScreenState extends State<ChatbotScreen> {
-  List<Map<String, String>> _messages = []; // Stores role & content
+  List<Map<String, dynamic>> _messages = []; // Stores role, content, medicines, and note
   TextEditingController _controller = TextEditingController();
-  FocusNode _focusNode = FocusNode(); // Manage cursor focus
-
-  final String _apiUrl = 'http://localhost:8000/recommendation/';  // FastAPI server URL
+  FocusNode _focusNode = FocusNode();
+  final String _apiUrl = 'http://localhost:8000/recommendation/';
 
   @override
   void dispose() {
@@ -21,7 +21,6 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     super.dispose();
   }
 
-  // Function to send message to the FastAPI backend
   Future<void> _sendMessageToBackend(String message) async {
     setState(() {
       _messages.add({'role': 'user', 'content': message});
@@ -30,57 +29,48 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     try {
       final response = await http.post(
         Uri.parse(_apiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'message': message, // Sending user message to the backend
-        }),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'message': message}),
       );
-
-      // Log the response for debugging
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        var aiResponse = data['response']['summary'] ?? 'No summary available.';
 
-        // Extract the assistant's response properly
-        final aiResponse = data['response']['summary'] ?? 'No summary available.';
-
-        // Check if aiResponse is a String
         if (aiResponse is String) {
-          setState(() {
-            _messages.add({'role': 'assistant', 'content': aiResponse});
-          });
-        } else {
-          print('Unexpected response type: ${aiResponse.runtimeType}');
-          setState(() {
-            _messages.add({'role': 'assistant', 'content': 'Error: Invalid response from assistant.'});
-          });
+          aiResponse = aiResponse.replaceAll(RegExp(r'```json|```'), '').trim();
+          aiResponse = json.decode(aiResponse);
         }
+
+        final List medicines = aiResponse['medicines'] ?? [];
+        final String note = aiResponse['disclaimer'] ?? '';
+
+        setState(() {
+          _messages.add({
+            'role': 'assistant',
+            'content': aiResponse['message'],
+            'medicines': medicines,
+            'note': note,
+          });
+        });
       } else {
-        print('Failed to connect to backend: ${response.statusCode}');
         setState(() {
           _messages.add({'role': 'assistant', 'content': 'Error: Unable to connect to backend.'});
         });
       }
     } catch (e) {
-      print('Error sending message: $e');
       setState(() {
         _messages.add({'role': 'assistant', 'content': 'Error: Failed to send message.'});
       });
     }
   }
 
-
-  // Handle message send on Enter key or Send button
   void _handleSendMessage() {
     final message = _controller.text.trim();
     if (message.isNotEmpty) {
-      _controller.clear(); // Clear input field
-      _sendMessageToBackend(message); // Send message to FastAPI backend
-      _focusNode.requestFocus(); // Keep the cursor in the text field
+      _controller.clear();
+      _sendMessageToBackend(message);
+      _focusNode.requestFocus();
     }
   }
 
@@ -98,30 +88,71 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return ListTile(
-                  title: Align(
-                    alignment: message['role'] == 'user'
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft, // AI message on left, user on right
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: message['role'] == 'user'
-                            ? Colors.blueAccent
-                            : Colors.grey[300], // Different color for AI messages
-                        borderRadius: BorderRadius.circular(8),
+
+                if (message['role'] == 'assistant') {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            message['content']!,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
                       ),
-                      child: Text(
-                        message['content']!,
-                        style: TextStyle(
-                          color: message['role'] == 'user'
-                              ? Colors.white
-                              : Colors.black, // Text color based on sender
+                      // Display medicines if available
+                      if (message['medicines'] != null && message['medicines'].isNotEmpty)
+                        ...message['medicines'].map<Widget>((medicine) {
+                          return Card(
+                            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(8),
+                              title: Text(medicine['name']),
+                              subtitle: Text("Price: \$${medicine['price']}"),
+                              leading: Image.network(
+                                medicine['image']!,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      // Display note if available
+                      if (message['note'] != null && message['note'].isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            message['note']!,
+                            style: TextStyle(color: Colors.grey[700]),
+                          ),
+                        ),
+                    ],
+                  );
+                } else {
+                  return ListTile(
+                    title: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          message['content']!,
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
             ),
           ),
@@ -138,13 +169,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                       border: OutlineInputBorder(),
                     ),
                     onSubmitted: (value) {
-                      _handleSendMessage(); // Send message on pressing Enter
+                      _handleSendMessage();
                     },
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: _handleSendMessage, // Send message on button press
+                  onPressed: _handleSendMessage,
                 ),
               ],
             ),
