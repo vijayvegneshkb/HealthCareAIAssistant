@@ -30,10 +30,13 @@ app.add_middleware(
 # Load configuration for the assistant
 config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST.json")
 
-# Initialize the healthcare assistant (AssistantAgent)
+# Initialize AssistantAgent to handle general queries and greetings
 healthassistant = AssistantAgent(
-    name="HealthcareAssistant",
-    system_message="You are a healthcare assistant. First give a one line 'message' regarding the symptom that would not make the user panic regarding the health condition. Then suggest the medicines and the prices along with the images for the symptom given by user. Give the response in a json format. Then give a 'disclaimer' saying that the recommendation is done by a AI, for better clarification please consult a doctor",
+    name="healthassistant",
+    system_message="You are a healthcare assistant. First provide a calming message for non-urgent symptoms "
+                   "For medical symptoms, suggest medicines with prices and images. All responses should be in JSON format. "
+                   "Remind the user to consult a doctor for confirmation. Handle general queries normally"
+                   "In the JSON, the calming message should be under the key 'message', medications as 'medicines' and remineder message as 'disclaimer'",
     llm_config={
         "timeout": 600,
         "cache_seed": 42,
@@ -41,6 +44,15 @@ healthassistant = AssistantAgent(
     },
 )
 
+classifier = AssistantAgent(
+    name="classifier",
+    system_message="You are a classifier. The output would be in JSON format" ,
+    llm_config={
+        "timeout": 600,
+        "cache_seed": 42,
+        "config_list": config_list,
+    },
+)
 
 corpus_file = "../ProductCatelog.xml"
 
@@ -72,29 +84,124 @@ user_proxy = UserProxyAgent(
     },
 )
 
+critic = AssistantAgent(
+    name="Critic",
+    llm_config={"config_list": config_list},
+    system_message="""
+    You are a critic. Your task is to review healthcare advice for harmful or incorrect information, ensuring it follows medical guidelines.
+    """,
+)
+
+# Define the trigger for nested chat: after the assistant's response, the critic provides feedback
+def reflection_message(recipient, messages, sender, config):
+    return f"Reflect on and provide critique on the following medical advice:\n\n{recipient.chat_messages_for_summary(sender)[-1]['content']}"
+
 # Define request structure for FastAPI
 class QueryRequest(BaseModel):
     message: str  # The user's medical symptom description
 
+
+# Function to classify the user input dynamically using UserProxyAgent
+def classify_intent(user_input):
+    # Ask the UserProxyAgent (LLM) to classify the input
+    classification_prompt = (
+        f"Classify the following input as either 'medical', 'greeting', or 'general':\n\n"
+        f"Input: {user_input}\n"
+        "Please provide the classification in one word."
+    )
+
+    # Call the assistant (or user proxy) to generate the classification
+    classification_response = user_proxy.initiate_chat(
+        classifier, message=classification_prompt, max_turns=1, summary_method="last_msg"
+    )
+    print(f"classification_response: {classification_response}")
+
+    summary = classification_response.summary
+
+    print(f"summary: {summary}")
+
+    clean_response = summary.strip().strip("```json").strip("```")
+
+    # Clean the response by removing markdown code block symbols (```json and ```)
+    # clean_response = classification_response.message.strip().strip("```json").strip("```")
+    
+    # Parse the cleaned JSON response
+    try:
+        response_json = json.loads(clean_response)
+        classification = response_json.get("classification", "").lower()
+        print(f"classification: {classification}")
+    except json.JSONDecodeError:
+        # Handle case where the response isn't valid JSON
+        classification = "general"
+    
+    return classification
+
+def handle_user_query(user_input):
+    # Classify the intent dynamically
+    print("XYZ ")
+    print(f"user_input: {user_input}")
+    intent = classify_intent(user_input)
+    print(f"intent: {intent}")
+
+    if intent == "greeting":
+        return {"message": "Hello! How can I assist you today with your health concerns?"}
+
+    if intent == "medical":
+        # Route medical queries to RetrieveUserProxyAgent for symptom analysis
+        chat_result = ragproxyagent.initiate_chat(
+            healthassistant, message=ragproxyagent.message_generator, problem=user_input, n_results=5
+        )
+        return chat_result
+    
+    # # Handle general queries with AssistantAgent
+    #general_response = assistant.initiate_chat(user_proxy, message=user_input, max_turns=1, summary_method="last_msg")
+    general_response = user_proxy.initiate_chat(recipient=healthassistant, message=user_input, max_turns=1, summary_method="last_msg")
+    return general_response
+
+
+
 @app.post("/recommendation/")
 async def get_recommendation(request: QueryRequest):
     try:
+
         input_message = request.message
         print(f"Received message: {input_message}")
 
-        # Fetch medicine information based on the user's symptoms from the XML file
-        # medicine_info = retrieve_proxy.initiate_chat(
-        #     recipient=healthassistant,
-        #     message=input_message,
-        #     max_turns=1,
-        #     summary_method="last_msg",
-        # )
-        healthassistant.reset()
+        # greetings = ["hi", "hello", "hey"]
+        # if any(input_message.startswith(greet) for greet in greetings):
+        #     return {"response": {"message": "Hi! How can I help you with your health concerns today?"}}
 
-   # qa_problem = questions[i]
-        medicine_info = ragproxyagent.initiate_chat(
-            healthassistant, message=ragproxyagent.message_generator, problem=input_message, n_results=5
-        )
+        #healthassistant.reset()
+
+        # # medicine_info = ragproxyagent.initiate_chat(
+        # #     healthassistant, message=ragproxyagent.message_generator, problem=input_message, n_results=5
+        # # )
+        # # Register the nested chat sequence
+        # # Register the nested chat sequence
+        # user_proxy.register_nested_chats(
+        #     [{"recipient": critic, "message": reflection_message, "summary_method": "last_msg", "max_turns": 1}],
+        #     trigger=healthassistant,  # Trigger after the healthassistant gives a response
+        # )
+        # # Step 1: Retrieve any relevant information using ragproxyagent
+        # retrieved_info = ragproxyagent.initiate_chat(
+        #     healthassistant, message=ragproxyagent.message_generator, problem=input_message, n_results=5
+        # )
+        
+        # # Step 2: Reset the healthassistant for a clean response with retrieved data
+        # healthassistant.reset()
+
+        # # Step 3: Chat with healthassistant using the query and retrieved information
+        # final_message = f"{input_message}\n\nAdditional info: {retrieved_info}"
+        # medicine_info = user_proxy.initiate_chat(
+        #     recipient=healthassistant, 
+        #     message=final_message, 
+        #     max_turns=1,
+        #     summary_method="last_msg"
+        # )
+        
+        # # Handle general queries with AssistantAgent
+        #general_response = assistant.initiate_chat(user_proxy, message=user_input, max_turns=1, summary_method="last_msg")
+        medicine_info = handle_user_query(input_message)
 
         print(f"Medicine information retrieved: {medicine_info}")
 

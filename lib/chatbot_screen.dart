@@ -35,24 +35,39 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        print('data :$data');
         var aiResponse = data['response']['summary'] ?? 'No summary available.';
+        bool hasSummary = data['response']['summary'] != null;
+        print('has_summary: $hasSummary');
 
-        if (aiResponse is String) {
+        if ((aiResponse is String) && hasSummary) {
           aiResponse = aiResponse.replaceAll(RegExp(r'```json|```'), '').trim();
           aiResponse = json.decode(aiResponse);
+
+          final List medicines = aiResponse['medicines'] ?? [];
+          final String note = aiResponse['disclaimer'] ?? '';
+
+          if(medicines.isEmpty){
+            setState(() {
+              _messages.add({'role': 'assistant', 'content': aiResponse['message']});
+            });
+          }else{
+            setState(() {
+              _messages.add({
+                'role': 'assistant',
+                'content': aiResponse['message'],
+                'medicines': medicines,
+                'note': note,
+              });
+            });
+          }   
         }
-
-        final List medicines = aiResponse['medicines'] ?? [];
-        final String note = aiResponse['disclaimer'] ?? '';
-
-        setState(() {
-          _messages.add({
-            'role': 'assistant',
-            'content': aiResponse['message'],
-            'medicines': medicines,
-            'note': note,
+        else{
+          var aiResponse = data['response'] ?? 'No response available.';
+          setState(() {
+            _messages.add({'role': 'assistant', 'content': aiResponse['message']});
           });
-        });
+        }
       } else {
         setState(() {
           _messages.add({'role': 'assistant', 'content': 'Error: Unable to connect to backend.'});
