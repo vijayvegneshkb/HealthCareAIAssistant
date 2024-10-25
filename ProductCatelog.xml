@@ -6,7 +6,7 @@
         <dosage>500mg</dosage>
         <uses>Headaches, muscle aches, arthritis, backaches, toothaches, colds, and fevers</uses>
         <sideEffects>Nausea, rash, and liver damage in high doses</sideEffects>
-        <image>https://example.com/paracetamol.jpg</image>
+        <image>[img]https://i.imgur.com/TUX5jHt.jpeg[/img]</image>
         <price>10.00</price>
     </medicine>
     <medicine>
@@ -15,7 +15,7 @@
         <dosage>200mg</dosage>
         <uses>Reduces fever, pain, and inflammation</uses>
         <sideEffects>Stomach upset, nausea, headache, dizziness</sideEffects>
-        <image>https://example.com/ibuprofen.jpg</image>
+        <image>[img]https://i.imgur.com/r65UKmO.jpeg[/img]</image>
         <price>15.00</price>
     </medicine>
     <medicine>
@@ -24,7 +24,7 @@
         <dosage>500mg</dosage>
         <uses>Infections caused by certain bacteria</uses>
         <sideEffects>Diarrhea, nausea, rash</sideEffects>
-        <image>https://example.com/amoxicillin.jpg</image>
+        <image>[img]https://i.imgur.com/Ta893qs.png[/img]</image>
         <price>20.00</price>
     </medicine>
     <medicine>
@@ -33,7 +33,7 @@
         <dosage>250mg</dosage>
         <uses>Respiratory infections, skin infections, ear infections</uses>
         <sideEffects>Nausea, vomiting, diarrhea</sideEffects>
-        <image>https://example.com/azithromycin.jpg</image>
+        <image>[img]https://i.imgur.com/Ou8SJok.jpeg[/img]</image>
         <price>25.00</price>
     </medicine>
     <medicine>
@@ -42,7 +42,7 @@
         <dosage>500mg</dosage>
         <uses>Helps control blood sugar levels</uses>
         <sideEffects>Gastrointestinal upset, lactic acidosis</sideEffects>
-        <image>https://example.com/metformin.jpg</image>
+        <image>[img]https://i.imgur.com/XuzYQki.jpeg[/img]</image>
         <price>30.00</price>
     </medicine>
     <medicine>
@@ -51,7 +51,7 @@
         <dosage>20mg</dosage>
         <uses>High cholesterol management</uses>
         <sideEffects>Muscle pain, liver damage, digestive problems</sideEffects>
-        <image>https://example.com/simvastatin.jpg</image>
+        <image>[img]https://i.imgur.com/pIA5Vs4.jpeg[/img]</image>
         <price>12.00</price>
     </medicine>
     <medicine>
@@ -60,7 +60,7 @@
         <dosage>10mg</dosage>
         <uses>High blood pressure, heart failure</uses>
         <sideEffects>Cough, elevated potassium levels, dizziness</sideEffects>
-        <image>https://example.com/lisinopril.jpg</image>
+        <image>[img]https://i.imgur.com/0iI0V1H.jpeg[/img]</image>
         <price>18.00</price>
     </medicine>
     <medicine>
@@ -69,7 +69,7 @@
         <dosage>50mg</dosage>
         <uses>Depression, anxiety disorders</uses>
         <sideEffects>Nausea, insomnia, sexual dysfunction</sideEffects>
-        <image>https://example.com/sertraline.jpg</image>
+        <image>[img]https://i.imgur.com/kYRE4TZ.jpeg[/img]</image>
         <price>22.00</price>
     </medicine>
     <medicine>
@@ -78,7 +78,7 @@
         <dosage>50mcg</dosage>
         <uses>Hypothyroidism</uses>
         <sideEffects>Increased heart rate, sweating, weight loss</sideEffects>
-        <image>https://example.com/levothyroxine.jpg</image>
+        <image>[img]https://i.imgur.com/LsQt8mN.jpeg[/img]</image>
         <price>14.00</price>
     </medicine>
     <medicine>
@@ -87,7 +87,7 @@
         <dosage>20mg</dosage>
         <uses>Gastroesophageal reflux disease (GERD)</uses>
         <sideEffects>Headache, nausea, diarrhea</sideEffects>
-        <image>https://example.com/omeprazole.jpg</image>
+        <image>[img]https://i.imgur.com/kS6LOV0.jpeg[/img]</image>
         <price>16.00</price>
     </medicine>
     <medicine>
@@ -96,7 +96,7 @@
         <dosage>10mg</dosage>
         <uses>Allergic reactions, asthma, autoimmune conditions</uses>
         <sideEffects>Weight gain, high blood sugar, increased risk of infection</sideEffects>
-        <image>https://example.com/prednisone.jpg</image>
+        <image>[img]https://i.imgur.com/g8ofThr.jpeg[/img]</image>
         <price>35.00</price>
     </medicine>
     <medicine>
@@ -105,7 +105,7 @@
         <dosage>40mg</dosage>
         <uses>Heart failure, liver disease, kidney problems</uses>
         <sideEffects>Dehydration, electrolyte imbalance, dizziness</sideEffects>
-        <image>https://example.com/furosemide.jpg</image>
+        <image>[img]https://i.imgur.com/GmTlr71.jpeg[/img]</image>
         <price>10.00</price>
     </medicine>
     <medicine>
@@ -114,7 +114,7 @@
         <dosage>81mg</dosage>
         <uses>Pain relief, anti-inflammatory, blood thinner</uses>
         <sideEffects>Stomach upset, bleeding, allergic reactions</sideEffects>
-        <image>https://example.com/aspirin.jpg</image>
+        <image>[img]https://i.imgur.com/bZqkUsZ.jpeg[/img]</image>
         <price>5.00</price>
     </medicine>
     <medicine>
@@ -123,7 +123,7 @@
         <dosage>300mg</dosage>
         <uses>Neuropathic pain, seizures</uses>
         <sideEffects>Dizziness, drowsiness, fatigue</sideEffects>
-        <image>https://example.com/gabapentin.jpg</image>
+        <image>[img]https://i.imgur.com/wYA6arh.jpeg[/img]</image>
         <price>30.00</price>
     </medicine>
     <medicine>
@@ -132,7 +132,7 @@
         <dosage>20mg</dosage>
         <uses>Depression, anxiety disorders</uses>
         <sideEffects>Nausea, dry mouth, drowsiness</sideEffects>
-        <image>https://example.com/citalopram.jpg</image>
+        <image>[img]https://i.imgur.com/XvVY1rY.jpeg[/img]</image>
         <price>24.00</price>
     </medicine>
     <medicine>
@@ -141,7 +141,7 @@
         <dosage>5mg</dosage>
         <uses>Prevent stroke, heart attack, and blood clots</uses>
         <sideEffects>Bleeding, bruising, interactions with other medications</sideEffects>
-        <image>https://example.com/warfarin.jpg</image>
+        <image>[img]https://i.imgur.com/ERUQzSd.jpeg[/img]</image>
         <price>40.00</price>
     </medicine>
     <medicine>
@@ -150,7 +150,7 @@
         <dosage>0.5mg</dosage>
         <uses>Anxiety disorders, panic attacks, seizures</uses>
         <sideEffects>Drowsiness, dizziness, dependence</sideEffects>
-        <image>https://example.com/clonazepam.jpg</image>
+        <image>[img]https://i.imgur.com/7Hbg85z.jpeg[/img]</image>
         <price>15.00</price>
     </medicine>
     <medicine>
@@ -159,7 +159,7 @@
         <dosage>12.5mg</dosage>
         <uses>Hypertension, fluid retention</uses>
         <sideEffects>Dizziness, electrolyte imbalance, increased urination</sideEffects>
-        <image>https://example.com/hydrochlorothiazide.jpg</image>
+        <image>[img]https://i.imgur.com/zm8P2aR.jpeg[/img]</image>
         <price>12.00</price>
     </medicine>
     <medicine>
@@ -168,7 +168,7 @@
         <dosage>150mg</dosage>
         <uses>Gastroesophageal reflux disease (GERD), ulcers</uses>
         <sideEffects>Headache, dizziness, constipation</sideEffects>
-        <image>https://example.com/ranitidine.jpg</image>
+        <image>[img]https://i.imgur.com/doRuTbr.jpeg[/img]</image>
         <price>20.00</price>
     </medicine>
     <medicine>
@@ -177,7 +177,7 @@
         <dosage>30mg</dosage>
         <uses>Moderate to severe pain relief</uses>
         <sideEffects>Constipation, drowsiness, nausea</sideEffects>
-        <image>https://example.com/codeine.jpg</image>
+        <image>[img]https://i.imgur.com/nDsZ8jt.jpeg[/img]</image>
         <price>28.00</price>
     </medicine>
     <medicine>
@@ -186,7 +186,7 @@
         <dosage>25mg</dosage>
         <uses>Allergies, insomnia, motion sickness</uses>
         <sideEffects>Drowsiness, dry mouth, dizziness</sideEffects>
-        <image>https://example.com/diphenhydramine.jpg</image>
+        <image>[img]https://i.imgur.com/9774pGo.jpeg[/img]</image>
         <price>9.00</price>
     </medicine>
     <medicine>
@@ -195,7 +195,7 @@
         <dosage>4mg</dosage>
         <uses>Allergies, hay fever</uses>
         <sideEffects>Drowsiness, dry mouth, dizziness</sideEffects>
-        <image>https://example.com/chlorpheniramine.jpg</image>
+        <image>[img]https://i.imgur.com/kkZeR6P.jpeg[/img]</image>
         <price>8.00</price>
     </medicine>
     <medicine>
@@ -204,7 +204,7 @@
         <dosage>50mg</dosage>
         <uses>High blood pressure, angina, heart failure</uses>
         <sideEffects>Fatigue, dizziness, depression</sideEffects>
-        <image>https://example.com/metoprolol.jpg</image>
+        <image>[img]https://i.imgur.com/mLbplUZ.jpeg[/img]</image>
         <price>19.00</price>
     </medicine>
     <medicine>
@@ -213,7 +213,7 @@
         <dosage>5mg</dosage>
         <uses>High blood pressure, chest pain</uses>
         <sideEffects>Swelling, flushing, palpitations</sideEffects>
-        <image>https://example.com/amlodipine.jpg</image>
+        <image>[img]https://i.imgur.com/Yjjq5AS.jpeg[/img]</image>
         <price>16.00</price>
     </medicine>
     <medicine>
@@ -222,7 +222,7 @@
         <dosage>500mg</dosage>
         <uses>Skin infections, respiratory infections, ear infections</uses>
         <sideEffects>Nausea, diarrhea, allergic reactions</sideEffects>
-        <image>https://example.com/cephalexin.jpg</image>
+        <image>[img]https://i.imgur.com/upRNuPi.jpeg[/img]</image>
         <price>25.00</price>
     </medicine>
     <medicine>
@@ -231,7 +231,7 @@
         <dosage>50mg</dosage>
         <uses>Moderate to moderately severe pain relief</uses>
         <sideEffects>Dizziness, nausea, constipation</sideEffects>
-        <image>https://example.com/tramadol.jpg</image>
+        <image>[img]https://i.imgur.com/WiHD8Id.jpeg[/img]</image>
         <price>18.00</price>
     </medicine>
     <medicine>
@@ -240,7 +240,7 @@
         <dosage>40mg</dosage>
         <uses>High blood pressure, performance anxiety</uses>
         <sideEffects>Dizziness, fatigue, cold hands/feet</sideEffects>
-        <image>https://example.com/propranolol.jpg</image>
+        <image>[img]https://i.imgur.com/0LA8JFV.jpeg[/img]</image>
         <price>20.00</price>
     </medicine>
     <medicine>
@@ -249,7 +249,7 @@
         <dosage>500mg</dosage>
         <uses>Respiratory infections, skin infections</uses>
         <sideEffects>Nausea, diarrhea, taste disturbance</sideEffects>
-        <image>https://example.com/clarithromycin.jpg</image>
+        <image>[img]https://i.imgur.com/HrE2Q7E.jpeg[/img]</image>
         <price>27.00</price>
     </medicine>
     <medicine>
@@ -258,7 +258,7 @@
         <dosage>145mg</dosage>
         <uses>High cholesterol</uses>
         <sideEffects>Muscle pain, liver issues, stomach upset</sideEffects>
-        <image>https://example.com/fenofibrate.jpg</image>
+        <image>[img]https://i.imgur.com/eUtUf1Q.jpeg[/img]</image>
         <price>32.00</price>
     </medicine>
     <medicine>
@@ -267,16 +267,16 @@
         <dosage>200mg</dosage>
         <uses>Seizures, trigeminal neuralgia</uses>
         <sideEffects>Dizziness, drowsiness, nausea</sideEffects>
-        <image>https://example.com/carbamazepine.jpg</image>
+        <image>[img]https://i.imgur.com/YOyad2W.jpeg[/img]</image>
         <price>22.00</price>
     </medicine>
     <medicine>
         <name>Spironolactone</name>
         <description>Diuretic for high blood pressure and fluid retention</description>
-        <dosage>25mg</dosage>
+        <dosage>100mg</dosage>
         <uses>Heart failure, high blood pressure, hormonal acne</uses>
         <sideEffects>Dizziness, breast tenderness, irregular menstrual periods</sideEffects>
-        <image>https://example.com/spironolactone.jpg</image>
+        <image>[img]https://i.imgur.com/ZvNQJCY.jpeg[/img]</image>
         <price>15.00</price>
     </medicine>
     <medicine>
@@ -285,7 +285,7 @@
         <dosage>50mcg</dosage>
         <uses>Allergic rhinitis, nasal polyps</uses>
         <sideEffects>Headache, nasal irritation, bleeding</sideEffects>
-        <image>https://example.com/fluticasone.jpg</image>
+        <image>[img]https://i.imgur.com/Od7Ls9T.jpeg[/img]</image>
         <price>30.00</price>
     </medicine>
     <medicine>
@@ -294,7 +294,7 @@
         <dosage>5mg</dosage>
         <uses>Allergic rhinitis, urticaria</uses>
         <sideEffects>Drowsiness, dry mouth, fatigue</sideEffects>
-        <image>https://example.com/levocetirizine.jpg</image>
+        <image>[img]https://i.imgur.com/9kRcra8.jpeg[/img]</image>
         <price>10.00</price>
     </medicine>
     <medicine>
@@ -303,16 +303,16 @@
         <dosage>30mg</dosage>
         <uses>Depression, generalized anxiety disorder</uses>
         <sideEffects>Nausea, dry mouth, sleepiness</sideEffects>
-        <image>https://example.com/duloxetine.jpg</image>
+        <image>[img]https://i.imgur.com/t4zNzEN.jpeg[/img]</image>
         <price>28.00</price>
     </medicine>
     <medicine>
         <name>Pregabalin</name>
         <description>Medication for nerve pain and seizures</description>
-        <dosage>75mg</dosage>
+        <dosage>300mg</dosage>
         <uses>Neuropathic pain, seizures</uses>
         <sideEffects>Dizziness, sleepiness, dry mouth</sideEffects>
-        <image>https://example.com/pregabalin.jpg</image>
+        <image>[img]https://i.imgur.com/COV7rpa.jpeg[/img]</image>
         <price>35.00</price>
     </medicine>
     <medicine>
@@ -321,7 +321,7 @@
         <dosage>20mg</dosage>
         <uses>Prevent stroke and blood clots</uses>
         <sideEffects>Bleeding, liver problems, allergic reactions</sideEffects>
-        <image>https://example.com/rivaroxaban.jpg</image>
+        <image>[img]https://i.imgur.com/b0LYq56.jpeg[/img]</image>
         <price>45.00</price>
     </medicine>
     <medicine>
@@ -330,25 +330,25 @@
         <dosage>15mg</dosage>
         <uses>Arthritis, pain relief</uses>
         <sideEffects>Nausea, stomach upset, headache</sideEffects>
-        <image>https://example.com/meloxicam.jpg</image>
+        <image>[img]https://i.imgur.com/ruBDdJ4.jpeg[/img]</image>
         <price>18.00</price>
     </medicine>
     <medicine>
         <name>Desvenlafaxine</name>
         <description>Antidepressant for major depressive disorder</description>
-        <dosage>50mg</dosage>
+        <dosage>100mg</dosage>
         <uses>Depression</uses>
         <sideEffects>Nausea, dizziness, sweating</sideEffects>
-        <image>https://example.com/desvenlafaxine.jpg</image>
+        <image>[img]https://i.imgur.com/q29LJPd.jpeg[/img]</image>
         <price>30.00</price>
     </medicine>
     <medicine>
         <name>Oxcarbazepine</name>
         <description>Anticonvulsant for epilepsy</description>
-        <dosage>300mg</dosage>
+        <dosage>150mg</dosage>
         <uses>Seizures</uses>
         <sideEffects>Dizziness, fatigue, nausea</sideEffects>
-        <image>https://example.com/oxcarbazepine.jpg</image>
+        <image>[img]https://i.imgur.com/aJByEg6.jpeg[/img]</image>
         <price>22.00</price>
     </medicine>
     <medicine>
@@ -357,7 +357,7 @@
         <dosage>100mg</dosage>
         <uses>Lowering uric acid levels</uses>
         <sideEffects>Nausea, rash, liver problems</sideEffects>
-        <image>https://example.com/allopurinol.jpg</image>
+        <image>[img]https://i.imgur.com/nIKse3G.jpeg[/img]</image>
         <price>28.00</price>
     </medicine>
     <medicine>
@@ -366,7 +366,7 @@
         <dosage>50mg</dosage>
         <uses>Rheumatoid arthritis, lupus</uses>
         <sideEffects>Nausea, increased risk of infection, liver damage</sideEffects>
-        <image>https://example.com/azathioprine.jpg</image>
+        <image>[img]https://i.imgur.com/ssvJ8Mx.jpeg[/img]</image>
         <price>50.00</price>
     </medicine>
     <medicine>
@@ -375,16 +375,16 @@
         <dosage>40mg</dosage>
         <uses>Gastroesophageal reflux disease</uses>
         <sideEffects>Headache, dizziness, nausea</sideEffects>
-        <image>https://example.com/protonix.jpg</image>
+        <image>[img]https://i.imgur.com/u4ous4J.jpeg[/img]</image>
         <price>33.00</price>
     </medicine>
     <medicine>
         <name>Bupropion</name>
         <description>Antidepressant and smoking cessation aid</description>
-        <dosage>150mg</dosage>
+        <dosage>75mg</dosage>
         <uses>Major depressive disorder, smoking cessation</uses>
         <sideEffects>Insomnia, dry mouth, agitation</sideEffects>
-        <image>https://example.com/bupropion.jpg</image>
+        <image>[img]https://i.imgur.com/lHjJdOQ.jpeg[/img]</image>
         <price>27.00</price>
     </medicine>
     <medicine>
@@ -393,7 +393,7 @@
         <dosage>180mg</dosage>
         <uses>Allergic rhinitis, hives</uses>
         <sideEffects>Headache, dizziness, nausea</sideEffects>
-        <image>https://example.com/fexofenadine.jpg</image>
+        <image>[img]https://i.imgur.com/mowlNGH.jpeg[/img]</image>
         <price>20.00</price>
     </medicine>
     <medicine>
@@ -402,7 +402,7 @@
         <dosage>150mg</dosage>
         <uses>Parasitic infections</uses>
         <sideEffects>Nausea, vomiting, headache</sideEffects>
-        <image>https://example.com/levamisole.jpg</image>
+        <image>[img]https://i.imgur.com/gC3ewXa.jpeg[/img]</image>
         <price>30.00</price>
     </medicine>
 </medicines>
