@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:collection';
 
 class ChatbotScreen extends StatefulWidget {
   @override
@@ -9,7 +8,7 @@ class ChatbotScreen extends StatefulWidget {
 }
 
 class _ChatbotScreenState extends State<ChatbotScreen> {
-  List<Map<String, dynamic>> _messages = []; // Stores role, content, medicines, and note
+  List<Map<String, dynamic>> _messages = [];
   TextEditingController _controller = TextEditingController();
   FocusNode _focusNode = FocusNode();
   final String _apiUrl = 'http://localhost:8000/recommendation/';
@@ -35,10 +34,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('data :$data');
         var aiResponse = data['response']['summary'] ?? 'No summary available.';
         bool hasSummary = data['response']['summary'] != null;
-        print('has_summary: $hasSummary');
 
         if ((aiResponse is String) && hasSummary) {
           aiResponse = aiResponse.replaceAll(RegExp(r'```json|```'), '').trim();
@@ -47,11 +44,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           final List medicines = aiResponse['medicines'] ?? [];
           final String note = aiResponse['disclaimer'] ?? '';
 
-          if(medicines.isEmpty){
+          if (medicines.isEmpty) {
             setState(() {
               _messages.add({'role': 'assistant', 'content': aiResponse['message']});
             });
-          }else{
+          } else {
             setState(() {
               _messages.add({
                 'role': 'assistant',
@@ -60,9 +57,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 'note': note,
               });
             });
-          }   
-        }
-        else{
+          }
+        } else {
           var aiResponse = data['response'] ?? 'No response available.';
           setState(() {
             _messages.add({'role': 'assistant', 'content': aiResponse['message']});
@@ -89,6 +85,14 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     }
   }
 
+  void _buyMedicine(Map<String, dynamic> medicine) {
+    Navigator.pushNamed(
+      context,
+      '/checkout',
+      arguments: medicine,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,12 +112,23 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ListTile(
-                        title: Container(
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.6, // Max 60% of screen width
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
                           ),
                           child: Text(
                             message['content']!,
@@ -121,25 +136,32 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                           ),
                         ),
                       ),
-                      // Display medicines if available
                       if (message['medicines'] != null && message['medicines'].isNotEmpty)
                         ...message['medicines'].map<Widget>((medicine) {
-                          return Card(
-                            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.all(8),
-                              title: Text(medicine['name']),
-                              subtitle: Text("Price: \$${medicine['price']}"),
-                              leading: Image.network(
-                                medicine['image']!,
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
+                          return ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width * 0.5, // Cap width to 50% of screen width
+                            ),
+                            child: Card(
+                              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              child: ListTile(
+                                contentPadding: EdgeInsets.all(8),
+                                title: Text(medicine['name']),
+                                subtitle: Text("Price: \$${medicine['price']}"),
+                                leading: Image.network(
+                                  medicine['image']!,
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                                trailing: ElevatedButton(
+                                  onPressed: () => _buyMedicine(medicine),
+                                  child: Text('Buy'),
+                                ),
                               ),
                             ),
                           );
                         }).toList(),
-                      // Display note if available
                       if (message['note'] != null && message['note'].isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -151,14 +173,25 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                     ],
                   );
                 } else {
-                  return ListTile(
-                    title: Align(
-                      alignment: Alignment.centerRight,
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.6, // Max 60% of screen width
+                      ),
                       child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
                         ),
                         child: Text(
                           message['content']!,
