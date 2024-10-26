@@ -34,7 +34,7 @@ config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST.json")
 healthassistant = AssistantAgent(
     name="healthassistant",
     system_message="You are a healthcare assistant. First provide a calming message for non-urgent symptoms "
-                   "For medical symptoms, suggest medicines with prices and images. All responses should be in JSON format. "
+                   "For medical symptoms, suggest medicines or medical kits(if applicable) with prices and images. All responses should be in JSON format. "
                    "Remind the user to consult a doctor for confirmation. Handle general queries normally"
                    "In the JSON, the calming message should be under the key 'message', medications as 'medicines' and remineder message as 'disclaimer'",
     llm_config={
@@ -77,6 +77,9 @@ ragproxyagent = RetrieveUserProxyAgent(
 user_proxy = UserProxyAgent(
     name="UserProxy",
     human_input_mode="NEVER",  # Automated user interaction
+    system_message="""
+    Please say that the context is not relevant to medicine.
+    """,
     code_execution_config={
         "last_n_messages": 1,
         "work_dir": "tasks",
@@ -121,9 +124,6 @@ def classify_intent(user_input):
     print(f"summary: {summary}")
 
     clean_response = summary.strip().strip("```json").strip("```")
-
-    # Clean the response by removing markdown code block symbols (```json and ```)
-    # clean_response = classification_response.message.strip().strip("```json").strip("```")
     
     # Parse the cleaned JSON response
     try:
@@ -153,10 +153,7 @@ def handle_user_query(user_input):
         )
         return chat_result
     
-    # # Handle general queries with AssistantAgent
-    #general_response = assistant.initiate_chat(user_proxy, message=user_input, max_turns=1, summary_method="last_msg")
-    general_response = user_proxy.initiate_chat(recipient=healthassistant, message=user_input, max_turns=1, summary_method="last_msg")
-    return general_response
+    return {"message": "I may not have an answer to that, but I'd love to help with health-related questions, product recommendations, or wellness advice. Let me know how I can assist!"}
 
 
 
@@ -167,40 +164,6 @@ async def get_recommendation(request: QueryRequest):
         input_message = request.message
         print(f"Received message: {input_message}")
 
-        # greetings = ["hi", "hello", "hey"]
-        # if any(input_message.startswith(greet) for greet in greetings):
-        #     return {"response": {"message": "Hi! How can I help you with your health concerns today?"}}
-
-        #healthassistant.reset()
-
-        # # medicine_info = ragproxyagent.initiate_chat(
-        # #     healthassistant, message=ragproxyagent.message_generator, problem=input_message, n_results=5
-        # # )
-        # # Register the nested chat sequence
-        # # Register the nested chat sequence
-        # user_proxy.register_nested_chats(
-        #     [{"recipient": critic, "message": reflection_message, "summary_method": "last_msg", "max_turns": 1}],
-        #     trigger=healthassistant,  # Trigger after the healthassistant gives a response
-        # )
-        # # Step 1: Retrieve any relevant information using ragproxyagent
-        # retrieved_info = ragproxyagent.initiate_chat(
-        #     healthassistant, message=ragproxyagent.message_generator, problem=input_message, n_results=5
-        # )
-        
-        # # Step 2: Reset the healthassistant for a clean response with retrieved data
-        # healthassistant.reset()
-
-        # # Step 3: Chat with healthassistant using the query and retrieved information
-        # final_message = f"{input_message}\n\nAdditional info: {retrieved_info}"
-        # medicine_info = user_proxy.initiate_chat(
-        #     recipient=healthassistant, 
-        #     message=final_message, 
-        #     max_turns=1,
-        #     summary_method="last_msg"
-        # )
-        
-        # # Handle general queries with AssistantAgent
-        #general_response = assistant.initiate_chat(user_proxy, message=user_input, max_turns=1, summary_method="last_msg")
         medicine_info = handle_user_query(input_message)
 
         print(f"Medicine information retrieved: {medicine_info}")

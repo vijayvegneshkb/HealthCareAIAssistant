@@ -1,82 +1,132 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:xml/xml.dart' as xml;
 
-class MedicalProductsScreen extends StatelessWidget {
+class MedicalProductsScreen extends StatefulWidget {
+  @override
+  _MedicalProductsScreenState createState() => _MedicalProductsScreenState();
+}
+
+class _MedicalProductsScreenState extends State<MedicalProductsScreen> {
+  List<Map<String, String>> products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadProductData();
+  }
+
+  Future<void> loadProductData() async {
+    try {
+      // Load the XML file from the assets
+      final xmlString = await rootBundle.loadString('assets/icons/ProductCatelog.xml');
+
+      // Parse the XML
+      final xml.XmlDocument document = xml.XmlDocument.parse(xmlString);
+
+      // Extract the products (medicines) from the XML
+      final medicines = document.findAllElements('medicine').map((element) {
+        return {
+          'name': element.getElement('name')?.text ?? 'Unknown',
+          'description': element.getElement('description')?.text ?? 'No description',
+          'image': element
+              .getElement('image')
+              ?.text
+              .replaceAll('[img]', '')
+              .replaceAll('[/img]', '') ?? '',
+          'price': element.getElement('price')?.text ?? '0.00',
+        };
+      }).toList();
+
+      // Update the state with the loaded products
+      setState(() {
+        products = medicines;
+      });
+    } catch (e) {
+      print("Error loading XML data: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Medical Products',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back, // Back arrow icon
-              color: Colors.white, // Change the color here
-              size: 24, // Change the size (weight) here
-            ),
-            onPressed: () {
-              Navigator.pop(context); // Go back to the previous screen
-            },
+        title: Text(
+          'Medical Products',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 24,
           ),
-          backgroundColor: Colors.blueAccent),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // Two items per row
-            childAspectRatio: 0.65, // Aspect ratio of each grid item
-            crossAxisSpacing: 16.0,
-            mainAxisSpacing: 16.0,
-          ),
-          itemCount: 6, // Change this based on your product count
-          itemBuilder: (context, index) {
-            return Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/icons/sugar_test.png', // Placeholder image, update with actual image
-                    width: 600,
-                    height: 300,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Sugar Test Kit', // Sample product name
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                      'The Sugar Metabolism Kit provides a hands-on introduction to biochemistry and the nutritional impact of sugars.'),
-                  SizedBox(height: 10),
-                  // Quantity and Add to Cart buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Quantity Button
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     // Add functionality to increase quantity
-                      //   },
-                      //   child: Text('Quantity'),
-                      // ),
-                      // Add to Cart Button
-                      ElevatedButton(
-                        onPressed: () {
-                          // Add functionality to add item to cart
-                        },
-                        child: Text('Add to Cart'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: products.isEmpty
+            ? Center(child: CircularProgressIndicator()) // Loading indicator
+            : GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Three items per row
+                  childAspectRatio: 0.65, // Aspect ratio of each grid item
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
+                ),
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.network(
+                          product['image']!, // Use network image from XML
+                          width: 100,
+                          height: 100,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(Icons.broken_image, size: 50);
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          product['name']!, // Product name
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          product['description']!, // Product description
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          '\$${product['price']}', // Product price
+                          style: TextStyle(
+                              color: Colors.green, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Add to cart functionality can be added here
+                          },
+                          child: Text('Add to Cart'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
       ),
     );
   }
