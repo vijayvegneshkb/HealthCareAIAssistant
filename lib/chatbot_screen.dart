@@ -148,12 +148,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                                 contentPadding: EdgeInsets.all(8),
                                 title: Text(medicine['name']),
                                 subtitle: Text("Price: \$${medicine['price']}"),
-                                leading: Image.network(
-                                  medicine['image']!,
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                ),
+                                leading: (medicine['image'] != null && medicine['image'].isNotEmpty) ? Image.network(
+                                      medicine['image']!,
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
                                 trailing: ElevatedButton(
                                   onPressed: () => _buyMedicine(medicine),
                                   child: Text('Buy'),
