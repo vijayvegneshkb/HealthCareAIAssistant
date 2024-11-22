@@ -32,7 +32,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       try {
         // Send order data to the backend
         final response = await http.post(
-          Uri.parse("http://localhost:5000/submit_order/"),
+          Uri.parse("http://127.0.0.1:5000/submit_order/"),
           headers: {"Content-Type": "application/json"},
           body: json.encode(orderData),
         );

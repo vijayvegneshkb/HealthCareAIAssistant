@@ -225,6 +225,15 @@ def submit_order():
         print(f"Error occurred: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
 
+@app.route("/orders/", methods=["GET"])
+def get_orders():
+    try:
+        orders = list(orders_collection.find({}, {"_id": 0}))  # Exclude MongoDB `_id` field
+        return jsonify(orders), 200
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
+
 
 # To run this backend, use the following command:
 # python app.py
