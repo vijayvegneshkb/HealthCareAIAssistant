@@ -48,3 +48,4 @@ app.*.map.json
 
 echo ".env" >> .gitignore
 echo "OAI_CONFIG_LIST.json" >> .gitignore
+echo "backend/OAI_CONFIG_LIST.json" >> .gitignore
