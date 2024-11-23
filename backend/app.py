@@ -28,7 +28,7 @@ with open('OAI_CONFIG_LIST.json', 'r') as f:
     config = json.load(f)
     config[0]['api_key'] = os.getenv('OPENAI_API_KEY')
 
-os.environ["OPENAI_API_KEY"] = "your-api-key-here"
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 # Check if the XML file is accessible
 if os.path.exists("../ProductCatelog.xml"):
@@ -47,7 +47,7 @@ config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST.json")
 conversation_context = {}
 order_contexts = {}
 
-# Initialize AssistantAgent to handle general queries and greetings
+
 healthassistant = AssistantAgent(
     name="healthassistant",
     system_message="You are a healthcare assistant. First provide a calming message for non-urgent symptoms "
@@ -84,21 +84,29 @@ department_classifier = AssistantAgent(
     },
 )
 
-# Customer service bot
+
 customer_service_bot = ConversableAgent(
     "customer_service_bot",
-    system_message="""You are a helpful customer service bot. Follow these exact steps:
-    1. If no order ID is provided in the message, ONLY ask for the order ID
-    2. If an order ID is provided but no issue description, ONLY ask for the issue description
-    3. If both order ID and issue description are provided, analyze and provide ONE of these decisions:
-       - REFUND: If the product is damaged/defective and within return window
-       - REPLACE: If the product is under warranty and fixable/replaceable
-       - ESCALATE: If the situation requires human agent intervention
-    Keep responses concise and handle one step at a time.""",
+    system_message="""You are a helpful customer service bot. Follow these steps:
+    1. Analyze the order issue, including any provided images
+    2. Evaluate the situation based on these criteria:
+        - If the product is damaged/defective and within return window: Initiate a refund
+        - If the product is under warranty and fixable: Offer replacement
+        - If the situation is complex or unclear: Escalate to human agent
+    3. Provide ONE decision:
+        - "Your Order is initiated for a refund"
+        - "Your Order is initiated for an exchange"
+        - "Your issue is escalated to a human agent"
+    4. Include a brief explanation with your decision.
+    
+    For image analysis:
+    - Verify if visible damage matches customer description
+    - Check if product condition supports the customer's claim
+    - Look for any discrepancies that might require human verification""",
     llm_config={
         "config_list": [
             {
-                "model": "gpt-4",
+                "model": "gpt-4o-mini",
                 "temperature": 0,
                 "api_key": os.environ.get("OPENAI_API_KEY"),
                 "timeout": 30
@@ -144,6 +152,13 @@ user_proxy = UserProxyAgent(
 # Define request structure and validation for Flask
 def classify_intent(user_input, user_id=None):
     global conversation_context
+    
+    # Add farewell detection at the start
+    farewell_phrases = ["thanks", "thank you", "bye", "goodbye", "alright", "ok", "okay"]
+    if any(phrase in user_input.lower() for phrase in farewell_phrases):
+        if user_id and user_id in conversation_context:
+            del conversation_context[user_id]
+        return "farewell"
     
     # Check if this is a follow-up to an order issue
     if user_id and user_id in conversation_context:
@@ -223,59 +238,51 @@ def get_bot_decision(customer_service_bot, prompt):
 
 def handle_order_issue(user_message, user_id="default_user", image_data=None):
     try:
-        global order_contexts
+        global order_contexts, customer_service_bot
         
-        # Initialize context for new user if doesn't exist
         if user_id not in order_contexts:
             order_contexts[user_id] = {"order_id": None, "issue": None, "image": None}
             
         context = order_contexts[user_id]
         
-        # If message is a number, treat it as order ID
         if user_message.strip().isdigit():
             context["order_id"] = user_message
             order_contexts[user_id] = context
             return {"message": "Thank you for providing the order ID. Could you please describe the issue you're experiencing? You can also upload an image of the problem if applicable."}
             
-        # If we don't have an order ID yet
-        if context["order_id"] is None:
-            return {"message": "Could you please provide your order ID?"}
+        farewell_phrases = ["thanks", "thank you", "bye", "goodbye", "alright", "ok", "okay"]
+        if any(phrase in user_message.lower() for phrase in farewell_phrases) and context.get("order_id"):
+            # Reset the context for this user
+            order_contexts[user_id] = {"order_id": None, "issue": None, "image": None}
+            return {"message": "Thank you for contacting us. Have a great day! If you need further assistance, feel free to reach out again."}
             
-        # If we have order ID but no issue yet, store the issue and provide decision
+        if context["order_id"] is None:
+            return {"message": "Could you please provide your order ID for the product you're having issues with?"}
+            
         if context["issue"] is None:
             context["issue"] = user_message
             context["image"] = image_data
             
-            # Create decision prompt with full context
+            # Perform fraud detection if image is provided
+            fraud_result = None
+            if image_data:
+                fraud_result = detect_fraud(image_data)
+                if fraud_result["is_fraudulent"]:
+                    return {"message": "We've detected potential issues with the provided image. Your case will be escalated to our security team for review."}
+
             decision_prompt = f"""
             Order ID: {context["order_id"]}
             Issue Description: {context["issue"]}
             {"Image Analysis: An image was provided showing the product issue." if image_data else "No image provided."}
+            {"Fraud Detection Result: " + str(fraud_result) if fraud_result else ""}
             
             Based on this information, provide ONE of these decisions:
-            - REFUND: If the product is damaged/defective and within return window
-            - REPLACE: If the product is under warranty and fixable/replaceable
-            - ESCALATE: If the situation requires human agent intervention
+            - Your Order is initiated for a refund
+            - Your Order is initiated for an exchange
+            - Your issue is escalated to a human agent
             
             Include a brief explanation with your decision.
             """
-            
-            # Get decision from bot
-            customer_service_bot = ConversableAgent(
-                "customer_service_bot",
-                system_message="You are a helpful customer service bot. Analyze the order issue, including any provided images, and provide ONE decision (REFUND/REPLACE/ESCALATE) with a brief explanation.",
-                llm_config={
-                    "config_list": [
-                        {
-                            "model": "gpt-4" if image_data else "gpt-4o-mini",
-                            "temperature": 0,
-                            "api_key": os.environ.get("OPENAI_API_KEY"),
-                            "timeout": 30
-                        }
-                    ]
-                },
-                human_input_mode="NEVER",
-            )
             
             user_proxy = ConversableAgent(
                 "user_proxy",
@@ -285,8 +292,7 @@ def handle_order_issue(user_message, user_id="default_user", image_data=None):
             
             user_proxy.send(decision_prompt, customer_service_bot, request_reply=True)
             response = customer_service_bot.last_message()
-
-            # Clear context after decision
+            
             order_contexts[user_id] = {"order_id": None, "issue": None, "image": None}
             
             return {"message": response["content"]}
@@ -306,8 +312,11 @@ def handle_user_query(user_input, user_id="default_user"):
     intent = classify_intent(user_input, user_id)
     print(f"intent: {intent}")
 
+    if intent == "farewell":
+        return {"message": "Thank you for contacting us. Have a great day! If you need further assistance, feel free to reach out again."}
+
     if intent == "greeting":
-        return {"message": "Hello! How can I assist you today with your health concerns?"}
+        return {"message": "Hello! How can I assist you today?"}
 
     if intent == "medical":
         department = classify_department(user_input)
@@ -399,6 +408,35 @@ def get_orders():
         print(f"Error occurred: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
 
+def detect_fraud(image_data):
+    try:
+        # Decode base64 image
+        img_bytes = base64.b64decode(image_data.split(',')[1] if ',' in image_data else image_data)
+        img = Image.open(BytesIO(img_bytes))
+        
+        # Basic checks (you can enhance these)
+        is_fraudulent = False
+        reasons = []
+        
+        # Check if image is too small
+        if img.size[0] < 100 or img.size[1] < 100:
+            is_fraudulent = True
+            reasons.append("Image resolution too low")
+            
+        # Check if image is empty/blank
+        if len(img.getcolors(img.size[0] * img.size[1])) < 5:
+            is_fraudulent = True
+            reasons.append("Image appears to be blank or uniform")
+            
+        return {
+            "is_fraudulent": is_fraudulent,
+            "reasons": reasons
+        }
+    except Exception as e:
+        return {
+            "is_fraudulent": True,
+            "reasons": ["Invalid image format or corrupted data"]
+        }
 
 # To run this backend, use the following command:
 # python app.py
