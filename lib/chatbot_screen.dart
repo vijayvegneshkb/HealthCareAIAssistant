@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:typed_data';

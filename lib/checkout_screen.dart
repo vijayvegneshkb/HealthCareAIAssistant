@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CheckoutScreen extends StatefulWidget {
+  const CheckoutScreen({super.key});
+
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
@@ -58,12 +60,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text("Error"),
-              content: Text("Failed to submit the order. Please try again."),
+              title: const Text("Error"),
+              content: const Text("Failed to submit the order. Please try again."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 ),
               ],
             ),
@@ -82,7 +84,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkout'),
+        title: const Text('Checkout'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -100,7 +102,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   height: 100,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(width: 16), // Space between image and text
+                const SizedBox(width: 16), // Space between image and text
                 // Text content on the right of the image
                 Expanded(
                   child: Column(
@@ -108,16 +110,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     children: [
                       Text(
                         'You are buying: ${medicine['name']}',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text('Price: \$${medicine['price']}'),
                     ],
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Form to enter details
             Form(
@@ -125,7 +127,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               child: Column(
                 children: [
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your name';
@@ -137,7 +139,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     },
                   ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Shipping Address'),
+                    decoration: const InputDecoration(labelText: 'Shipping Address'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your address';
@@ -149,7 +151,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     },
                   ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Credit Card Number'),
+                    decoration: const InputDecoration(labelText: 'Credit Card Number'),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.isEmpty || value.length != 16) {
@@ -161,10 +163,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       _creditCardNumber = value!;
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () => _submitOrder(medicine),
-                    child: Text('Submit Order'),
+                    child: const Text('Submit Order'),
                   ),
                 ],
               ),
@@ -182,7 +184,7 @@ class OrderConfirmationScreen extends StatelessWidget {
   final String creditCardNumber;
   final int orderNumber;
 
-  OrderConfirmationScreen({
+  const OrderConfirmationScreen({super.key, 
     required this.name,
     required this.address,
     required this.creditCardNumber,
@@ -193,26 +195,26 @@ class OrderConfirmationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Confirmation'),
+        title: const Text('Order Confirmation'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Thank you for your order, $name!', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
+            Text('Thank you for your order, $name!', style: const TextStyle(fontSize: 20)),
+            const SizedBox(height: 10),
             Text('Order Number: $orderNumber'),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text('Shipping to: $address'),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text('Payment made with card ending in: ${creditCardNumber.substring(12)}'), // Display last 4 digits
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));
               },
-              child: Text('Back to Home'),
+              child: const Text('Back to Home'),
             ),
           ],
         ),

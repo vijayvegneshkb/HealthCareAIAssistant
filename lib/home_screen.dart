@@ -5,6 +5,8 @@ import 'orders_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -22,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 16.0),
           child: Text(
             'Personal Health Assistant',
             style: TextStyle(
@@ -38,10 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrdersScreen()),
+                MaterialPageRoute(builder: (context) => const OrdersScreen()),
               );
             },
-            child: Text(
+            child: const Text(
               'View Orders',
               style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
             ),
@@ -56,9 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   color: Colors.blue[900],
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(height: 20),
@@ -96,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Cards Section - Horizontally aligned with equal width
             Padding(
@@ -117,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     },
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   _buildHoverableCard(
                     context,
                     Icons.medical_services, // Changed icon for Medical Products
@@ -131,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     },
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   _buildHoverableCard(
                     context,
                     Icons.event_available, // Changed icon for Appointments
@@ -145,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     },
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   _buildHoverableCard(
                     context,
                     Icons.medication, // Changed icon for Personal Medications
@@ -189,8 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.pushNamed(context, route);
           },
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            padding: EdgeInsets.all(16),
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.all(16),
             height: 180, // Adjust height for uniformity
             decoration: BoxDecoration(
               color: isHovered ? bgColor.withOpacity(0.8) : bgColor,
@@ -201,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: bgColor.withOpacity(0.4),
                         spreadRadius: 4,
                         blurRadius: 10,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ]
                   : [],
@@ -210,18 +212,18 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon, color: Colors.white, size: 50),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 5),
-                Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+                const SizedBox(height: 5),
+                const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
               ],
             ),
           ),

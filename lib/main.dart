@@ -6,10 +6,12 @@ import 'checkout_screen.dart';
 
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,11 +19,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(), // Default screen
+      home: const HomeScreen(), // Default screen
       routes: {
-        '/chatbot': (context) => ChatbotScreen(),
-        '/medicalProducts': (context) => MedicalProductsScreen(),
-        '/checkout': (context) => CheckoutScreen(), // New route for checkout
+        '/chatbot': (context) => const ChatbotScreen(),
+        '/medicalProducts': (context) => const MedicalProductsScreen(),
+        '/checkout': (context) => const CheckoutScreen(), // New route for checkout
       },
     );
   }

@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class OrdersScreen extends StatefulWidget {
+  const OrdersScreen({super.key});
+
   @override
   _OrdersScreenState createState() => _OrdersScreenState();
 }
@@ -40,13 +42,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Orders', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.blueAccent,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : orders.isEmpty
-              ? Center(child: Text('No orders found', style: TextStyle(fontSize: 18)))
+              ? const Center(child: Text('No orders found', style: TextStyle(fontSize: 18)))
               : ListView.builder(
                   itemCount: orders.length,
                   itemBuilder: (context, index) {
@@ -68,7 +70,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 children: [
                                   Text(
                                     'Order #${order['orderNumber']}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blueAccent,
@@ -83,7 +85,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Row(
                                 children: [
                                   ClipRRect(
@@ -95,22 +97,22 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                  SizedBox(width: 16),
+                                  const SizedBox(width: 16),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           order['medicine']['name'],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        SizedBox(height: 5),
+                                        const SizedBox(height: 5),
                                         Text(
                                           'Price: \$${order['medicine']['price']}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             color: Colors.green,
                                           ),
@@ -121,14 +123,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 ],
                               ),
                               Divider(color: Colors.grey[300]),
-                              Text(
+                              const Text(
                                 'Customer Details',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Text('Name: ${order['name']}'),
                               Text('Address: ${order['address']}'),
                               Text('Credit Card (Last 4): ${order['creditCardNumber']}'),

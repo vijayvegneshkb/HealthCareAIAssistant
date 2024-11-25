@@ -4,6 +4,8 @@ import 'package:xml/xml.dart' as xml;
 import 'checkout_screen.dart';
 
 class MedicalProductsScreen extends StatefulWidget {
+  const MedicalProductsScreen({super.key});
+
   @override
   _MedicalProductsScreenState createState() => _MedicalProductsScreenState();
 }
@@ -52,12 +54,12 @@ class _MedicalProductsScreenState extends State<MedicalProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Medical Products',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
             size: 24,
@@ -69,11 +71,11 @@ class _MedicalProductsScreenState extends State<MedicalProductsScreen> {
         backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: products.isEmpty
-            ? Center(child: CircularProgressIndicator()) // Loading indicator
+            ? const Center(child: CircularProgressIndicator()) // Loading indicator
             : GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3, // Three items per row
                   childAspectRatio: 0.65, // Aspect ratio of each grid item
                   crossAxisSpacing: 16.0,
@@ -95,42 +97,42 @@ class _MedicalProductsScreenState extends State<MedicalProductsScreen> {
                           width: 100,
                           height: 100,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.broken_image, size: 50);
+                            return const Icon(Icons.broken_image, size: 50);
                           },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           product['name']!, // Product name
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
                           product['description']!, // Product description
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           '\$${product['price']}', // Product price
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.green, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ElevatedButton(
                           onPressed: () {
                             // Navigate to CheckoutScreen and pass the product details
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CheckoutScreen(),
+                                builder: (context) => const CheckoutScreen(),
                                 settings: RouteSettings(
                                   arguments: product, // Passing product details
                                 ),
                               ),
                             );
                           },
-                          child: Text('Buy'),
+                          child: const Text('Buy'),
                         ),
                       ],
                     ),
