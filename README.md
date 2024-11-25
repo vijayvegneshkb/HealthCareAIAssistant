@@ -42,7 +42,7 @@ In your backend folder, create a virtual environment and install the necessary P
 `venv\Scripts\activate`
 
 # Install FastAPI, Uvicorn, and other necessary libraries
-`pip install fastapi uvicorn openai autogen chromadb markdownify pypdf multi-part`
+`pip install openai autogen flask markdownify pypdf multi-part`
 
 ### Setup OpenAI and AutoGen Configuration: 
 Create a configuration file named OAI_CONFIG_LIST.json in backend folder and add your OpenAI API credentials to it:

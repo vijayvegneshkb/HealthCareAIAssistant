@@ -63,20 +63,22 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   }
 
   Future<void> _sendMessageToBackend(String message) async {
+    final currentImageData = _webImage;
+    
     setState(() {
       _messages.add({
         'role': 'user', 
         'content': message,
         'imagePath': _selectedImagePath,
-        'imageData': _webImage,
+        'imageData': currentImageData,
       });
     });
 
     try {
       Map<String, dynamic> requestBody = {'message': message};
       
-      if (_webImage != null) {
-        final base64Image = base64Encode(_webImage!);
+      if (currentImageData != null) {
+        final base64Image = base64Encode(currentImageData);
         requestBody['image'] = base64Image;
       }
 
